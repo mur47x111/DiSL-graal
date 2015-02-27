@@ -1,0 +1,2 @@
+disl.version=2.1
+disl.prefix=disl-${disl.version}

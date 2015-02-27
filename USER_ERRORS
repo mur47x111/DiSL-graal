@@ -1,0 +1,16 @@
+Exception in thread "main" java.lang.VerifyError: (class: ..., method: ... signature: ... Expecting to find object/array on stack
+ - CAUSE: The instrumentation attempts to access an uninitialized object.
+ - HOW TO FIX: Fix the instrumentation or disable the Java verifier (-noverify
+          commmand line option).
+
+Java process ends with SEGFAULT
+ - CAUSE: The instrumentation instruments one of the java.lang.* classes and
+          disturbs the java initialization
+ - HOW TO FIX: Fix the instrumentation or exclude the class causing the problem
+          in the exclusion list (-Ddisl.exclusionList=exclusion.lst command line
+          option of DiSL server).
+
+Build failure: java.lang.UnsupportedClassVersionError: ch/usi/dag/disl/utilinstr/tlvinserter/ExtendThread : Unsupported major.minor version 51.0
+ - CAUSE: A version 1.7.x JRE is used; this version is not yet supported
+ - HOW TO FIX: Use a version 1.6.x JRE instead.
+

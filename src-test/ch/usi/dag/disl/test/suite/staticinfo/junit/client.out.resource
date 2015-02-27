@@ -1,0 +1,4 @@
+this_is_a_method_name
+this_is_a_method_name
+this_is_a_method_name
+This is the body of TargetClass.this_is_a_method_name

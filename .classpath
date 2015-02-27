@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="output/build/disl" path="src-disl"/>
+	<classpathentry kind="src" output="output/build/shvm" path="src-shvm"/>
+	<classpathentry kind="src" output="output/build/util" path="src-util"/>
+	<classpathentry kind="src" output="output/build/test" path="src-test"/>
+	<classpathentry kind="src" output="output/build/shvm-dispatch" path="src-shvm-dispatch"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="output/lib/disl-bypass.jar"/>
+	<classpathentry kind="lib" path="lib/asm-debug-all-5.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/hamcrest-core-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.11.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="lib/graal-external.jar"/>
+	<classpathentry kind="output" path="output/build/disl"/>
+</classpath>
