@@ -167,20 +167,20 @@ def server_parser(parser):
         default=False,
         help="enable debug output")
 
-    group.add_argument("-s_noexcepthandler",
+    group.add_argument("-s_enableexcepthandler",
         action="store_true",
         default=False,
-        help="does not instrument exception handler (improves performance but does not protect from errors within instrumentation)")
+        help="instruments exception handler")
 
-    group.add_argument("-s_graalsupport",
+    group.add_argument("-s_disablegraalsupport",
         action="store_true",
         default=False,
-        help="auto insert instrumentation boundary")
+        help="stops auto-inserting instrumentation boundary")
 
-    group.add_argument("-s_nodynamicbypass",
+    group.add_argument("-s_enabledynamicbypass",
         action="store_true",
         default=False,
-        help="does not apply dynamic bypass")
+        help="applies dynamic bypass")
 
     group.add_argument("-s_exclusionlist",
         default=None,
@@ -343,11 +343,11 @@ def parse_arguments(parser):
         args.s_opts+= ["-Ddebug=true"]
     if args.s_port is not None:
         args.s_opts+= ["-Ddislserver.port="+args.s_port]
-    if args.s_noexcepthandler is True:
+    if args.s_enableexcepthandler is False:
         args.s_opts+= ["-Ddisl.noexcepthandler=true"]
-    if args.s_graalsupport is True:
+    if args.s_disablegraalsupport is False:
         args.s_opts+= ["-Ddisl.graalsupport=true"]
-    if args.s_nodynamicbypass is True:
+    if args.s_enabledynamicbypass is False:
         args.s_opts+= ["-Ddislserver.disablebypass=true"]
     if args.s_exclusionlist is not None:
         args.s_opts+= ["-Ddisl.exclusionList="+args.s_exclusionlist]
@@ -370,10 +370,7 @@ def parse_arguments(parser):
         args.instrumentation = args.inst
 
     # supply c_app from positional app if set
-    if args.c_app is not None and args.app is not None:
-        parser.error("-c_app and -app set both")
-    if args.app is not None:
-        args.c_app = args.app
+    args.c_app+= args.app
 
     #if args.print_namespace:
     #    for key in args.__dict__:
@@ -505,6 +502,7 @@ def run_client(args, parser):
     else:
         c_cmd+= ["-Xbootclasspath/a:"+bypass+":"+args.instrumentation+":"+graal]
 
+    c_cmd+= ["-noverify"]
     c_cmd+= ["-G:-RemoveNeverExecutedCode"]
     c_cmd+= args.c_app
 
