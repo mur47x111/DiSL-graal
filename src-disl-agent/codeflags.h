@@ -15,8 +15,8 @@ extern "C" {
 #define ch_usi_dag_disl_DiSL_CodeOption_Flag_SPLIT_METHODS 4L
 #undef ch_usi_dag_disl_DiSL_CodeOption_Flag_CATCH_EXCEPTIONS
 #define ch_usi_dag_disl_DiSL_CodeOption_Flag_CATCH_EXCEPTIONS 8L
-#undef ch_usi_dag_disl_DiSL_CodeOption_Flag_GRAAL_SUPPORT
-#define ch_usi_dag_disl_DiSL_CodeOption_Flag_GRAAL_SUPPORT 16L
+#undef ch_usi_dag_disl_DiSL_CodeOption_Flag_INSERT_DELIMITATION
+#define ch_usi_dag_disl_DiSL_CodeOption_Flag_INSERT_DELIMITATION 16L
 #ifdef __cplusplus
 }
 #endif
