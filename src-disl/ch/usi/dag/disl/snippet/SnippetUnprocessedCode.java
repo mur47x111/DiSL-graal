@@ -21,7 +21,6 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 
 import ch.usi.dag.disl.DiSL.CodeOption;
-import ch.usi.dag.disl.annotation.AfterReturning;
 import ch.usi.dag.disl.annotation.Before;
 import ch.usi.dag.disl.coderep.Code;
 import ch.usi.dag.disl.coderep.UnprocessedCode;
@@ -115,7 +114,7 @@ public class SnippetUnprocessedCode {
         final InsnList insns = code.getInstructions ();
 
         if (options.contains (CodeOption.GRAAL_SUPPORT)) {
-            __insertGraalHints (insns, annotationClass);
+            __insertGraalHints (insns, annotationClass, marker);
         }
 
         if (options.contains (CodeOption.DYNAMIC_BYPASS) && __snippetDynamicBypass) {
@@ -353,12 +352,15 @@ public class SnippetUnprocessedCode {
     private static final Method __graalInstrumentationBegin__ = __getMethod (CompilerDecision.class, "instrumentationBegin", int.class);
     private static final Method __graalInstrumentationEnd__ = __getMethod (CompilerDecision.class, "instrumentationEnd");
 
-    private static void __insertGraalHints(final InsnList insns, final Class <?> annotationClass) {
-        if (Before.class.equals(annotationClass)) {
+
+    private static void __insertGraalHints (
+        final InsnList insns, final Class <?> annotationClass, final Marker marker) {
+        if (Before.class.equals (annotationClass)
+            && BytecodeMarker.class.isAssignableFrom (marker.getClass ())) {
             insns.insert (AsmHelper.invokeStatic (__graalInstrumentationBegin__));
             insns.insert (new InsnNode (Opcodes.ICONST_1));
             insns.add (AsmHelper.invokeStatic (__graalInstrumentationEnd__));
-        } else if (AfterReturning.class.equals (annotationClass)) {
+        } else {
             insns.insert (AsmHelper.invokeStatic (__graalInstrumentationBegin__));
             insns.insert (new InsnNode (Opcodes.ICONST_M1));
             insns.add (AsmHelper.invokeStatic (__graalInstrumentationEnd__));
