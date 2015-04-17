@@ -176,9 +176,9 @@ public final class DiSL {
             result.add (CodeOption.SPLIT_METHODS);
         }
 
-        final boolean graalsupport = __getBoolean ("disl.graalsupport", properties);
-        if (graalsupport) {
-            result.add (CodeOption.GRAAL_SUPPORT);
+        final boolean insertdelimitation = __getBoolean ("disl.insertdelimitation", properties);
+        if (insertdelimitation) {
+            result.add (CodeOption.INSERT_DELIMITATION);
         }
 
         return result;
@@ -576,7 +576,7 @@ public final class DiSL {
         /**
          * auto instrument invocation to instrumentationBegin/instrumentationEnd
          */
-        GRAAL_SUPPORT (Flag.GRAAL_SUPPORT);
+        INSERT_DELIMITATION (Flag.INSERT_DELIMITATION);
 
         /**
          * Flags corresponding to individual code options. The flags are
@@ -587,7 +587,7 @@ public final class DiSL {
             static final int DYNAMIC_BYPASS = 1 << 1;
             static final int SPLIT_METHODS = 1 << 2;
             static final int CATCH_EXCEPTIONS = 1 << 3;
-            static final int GRAAL_SUPPORT = 1 << 4;
+            static final int INSERT_DELIMITATION = 1 << 4;
         }
 
         //

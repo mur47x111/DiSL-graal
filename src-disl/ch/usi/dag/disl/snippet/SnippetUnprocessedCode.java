@@ -113,7 +113,7 @@ public class SnippetUnprocessedCode {
         //
         final InsnList insns = code.getInstructions ();
 
-        if (options.contains (CodeOption.GRAAL_SUPPORT)) {
+        if (options.contains (CodeOption.INSERT_DELIMITATION)) {
             __insertGraalHints (insns, annotationClass, marker);
         }
 
