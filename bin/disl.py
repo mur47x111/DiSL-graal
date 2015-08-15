@@ -172,10 +172,10 @@ def server_parser(parser):
         default=False,
         help="instruments exception handler")
 
-    group.add_argument("-s_disabledelimitation",
+    group.add_argument("-s_insertdelimitation",
         action="store_true",
         default=False,
-        help="stops auto-inserting instrumentation boundary")
+        help="enable auto-inserting instrumentation boundary")
 
     group.add_argument("-s_enabledynamicbypass",
         action="store_true",
@@ -345,7 +345,7 @@ def parse_arguments(parser):
         args.s_opts+= ["-Ddislserver.port="+args.s_port]
     if args.s_enableexcepthandler is False:
         args.s_opts+= ["-Ddisl.noexcepthandler=true"]
-    if args.s_disabledelimitation is False:
+    if args.s_insertdelimitation is False:
         args.s_opts+= ["-Ddisl.insertdelimitation=true"]
     if args.s_enabledynamicbypass is False:
         args.s_opts+= ["-Ddislserver.disablebypass=true"]
