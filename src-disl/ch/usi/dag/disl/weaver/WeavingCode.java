@@ -303,7 +303,8 @@ public class WeavingCode {
 
                     // Check that the expected type matches the actual type.
                     final Type actualType = FrameHelper.getStackByIndex (basicFrame, itemIndex).getType ();
-                    if (expectedType.getSort () != actualType.getSort ()) {
+                    if ((expectedType.getSort () != actualType.getSort ())
+                        && !(actualType.getSort () == Type.INT && expectedType.getSort () < Type.INT)) {
                         throw new InvalidContextUsageException (
                             "%s: expected %s but found %s when accessing stack item %d",
                             __location (snippet, invokeInsn), expectedType, actualType, itemIndex
@@ -993,9 +994,17 @@ public class WeavingCode {
             }
 
             // Remove the invocation sequence.
-            insns.remove (insn.getPrevious ());
-            insns.remove (insn.getPrevious ());
-            insns.remove (insn.getPrevious ());
+            int count = 3;
+
+            while (count > 0) {
+                final AbstractInsnNode current = insn.getPrevious ();
+
+                if (current.getOpcode () != -1) {
+                    count--;
+                }
+
+                insns.remove (current);
+            }
             insns.remove (insn);
         }
     }

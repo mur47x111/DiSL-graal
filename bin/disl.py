@@ -503,7 +503,6 @@ def run_client(args, parser):
         c_cmd+= ["-Xbootclasspath/a:"+bypass+":"+args.instrumentation+":"+graal]
 
     c_cmd+= ["-noverify"]
-    c_cmd+= ["-G:-RemoveNeverExecutedCode"]
     c_cmd+= args.c_app
 
     #print c_cmd

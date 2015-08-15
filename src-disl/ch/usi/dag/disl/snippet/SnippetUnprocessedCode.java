@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jdk.internal.jvmci.debug.DelimitationAPI;
+
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -37,8 +39,6 @@ import ch.usi.dag.disl.processorcontext.ArgumentProcessorContext;
 import ch.usi.dag.disl.processorcontext.ArgumentProcessorMode;
 import ch.usi.dag.disl.util.AsmHelper;
 import ch.usi.dag.disl.util.AsmHelper.Insns;
-
-import com.oracle.graal.debug.external.CompilerDecision;
 
 
 /**
@@ -349,8 +349,8 @@ public class SnippetUnprocessedCode {
         insns.add (AsmHelper.invokeStatic (__dbDeactivate__));
     }
 
-    private static final Method __graalInstrumentationBegin__ = __getMethod (CompilerDecision.class, "instrumentationBegin", int.class);
-    private static final Method __graalInstrumentationEnd__ = __getMethod (CompilerDecision.class, "instrumentationEnd");
+    private static final Method __graalInstrumentationBegin__ = __getMethod (DelimitationAPI.class, "instrumentationBegin", int.class);
+    private static final Method __graalInstrumentationEnd__ = __getMethod (DelimitationAPI.class, "instrumentationEnd");
 
 
     private static void __insertGraalHints (
