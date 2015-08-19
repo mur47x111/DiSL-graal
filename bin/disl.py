@@ -345,7 +345,7 @@ def parse_arguments(parser):
         args.s_opts+= ["-Ddislserver.port="+args.s_port]
     if args.s_enableexcepthandler is False:
         args.s_opts+= ["-Ddisl.noexcepthandler=true"]
-    if args.s_insertdelimitation is False:
+    if args.s_insertdelimitation is True:
         args.s_opts+= ["-Ddisl.insertdelimitation=true"]
     if args.s_enabledynamicbypass is False:
         args.s_opts+= ["-Ddislserver.disablebypass=true"]
