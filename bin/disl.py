@@ -487,7 +487,7 @@ def run_client(args, parser):
     eagent = args.disl_home+"/lib/libdislreagent"+lib_suffix()
     bypass = args.disl_home+"/lib/disl-bypass.jar"
     dispatch = args.disl_home+"/lib/dislre-dispatch.jar"
-    graal = args.disl_home+"/lib/graal-query.jar"
+    graal = args.disl_home+"/lib/graal-directives.jar"
 
     c_cmd = ["mx"]
     c_cmd+= ["vm"]

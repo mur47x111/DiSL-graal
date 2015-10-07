@@ -20,6 +20,8 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
 
+import com.oracle.graal.api.directives.GraalDirectives;
+
 import ch.usi.dag.disl.DiSL.CodeOption;
 import ch.usi.dag.disl.annotation.Before;
 import ch.usi.dag.disl.coderep.Code;
@@ -37,8 +39,6 @@ import ch.usi.dag.disl.processorcontext.ArgumentProcessorContext;
 import ch.usi.dag.disl.processorcontext.ArgumentProcessorMode;
 import ch.usi.dag.disl.util.AsmHelper;
 import ch.usi.dag.disl.util.AsmHelper.Insns;
-
-import com.oracle.graal.debug.query.DelimitationAPI;
 
 
 /**
@@ -349,8 +349,8 @@ public class SnippetUnprocessedCode {
         insns.add (AsmHelper.invokeStatic (__dbDeactivate__));
     }
 
-    private static final Method __graalInstrumentationBegin__ = __getMethod (DelimitationAPI.class, "instrumentationBegin", int.class);
-    private static final Method __graalInstrumentationEnd__ = __getMethod (DelimitationAPI.class, "instrumentationEnd");
+    private static final Method __graalInstrumentationBegin__ = __getMethod (GraalDirectives.class, "instrumentationBegin", int.class);
+    private static final Method __graalInstrumentationEnd__ = __getMethod (GraalDirectives.class, "instrumentationEnd");
 
 
     private static void __insertGraalHints (
