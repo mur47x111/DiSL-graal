@@ -490,6 +490,8 @@ def run_client(args, parser):
     graal = args.disl_home+"/lib/graal-directives.jar"
 
     c_cmd = ["mx"]
+    c_cmd+= ["-p"]
+    c_cmd+= [os.environ["GRAAL_HOME"]]
     c_cmd+= ["vm"]
     c_cmd+= args.c_opts
     c_cmd+= ["-agentpath:"+cagent]
