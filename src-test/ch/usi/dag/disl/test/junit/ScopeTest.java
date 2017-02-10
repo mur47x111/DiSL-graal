@@ -1,13 +1,12 @@
 package ch.usi.dag.disl.test.junit;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-
 import ch.usi.dag.disl.exception.ScopeParserException;
 import ch.usi.dag.disl.scope.Scope;
 import ch.usi.dag.disl.scope.ScopeImpl;
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ScopeTest {
 
@@ -16,14 +15,14 @@ public class ScopeTest {
     @Test
     public void testSimple()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("my.pkg.TargetClass.main()");
+        final Scope s = new ScopeImpl("my.pkg.TargetClass.main()");
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "main", "()V"));
     }
 
     @Test
     public void testComplete()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("java.lang.String my.pkg.TargetClass.main(java.lang.String[])");
+        final Scope s = new ScopeImpl("java.lang.String my.pkg.TargetClass.main(java.lang.String[])");
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "main", "([Ljava.lang.String;)Ljava.lang.String;"));
     }
 
@@ -32,14 +31,14 @@ public class ScopeTest {
     @Test
     public void testMethodWildCard()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("java.lang.String my.pkg.TargetClass.*main(java.lang.String[])");
+        final Scope s = new ScopeImpl("java.lang.String my.pkg.TargetClass.*main(java.lang.String[])");
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "blablablamain", "([Ljava.lang.String;)Ljava.lang.String;"));
     }
 
     @Test
     public void testMethodAllWildCard()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("my.pkg.TargetClass.*");
+        final Scope s = new ScopeImpl("my.pkg.TargetClass.*");
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "clinit", "()V"));
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "init", "()V"));
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method_init", "()V"));
@@ -48,7 +47,7 @@ public class ScopeTest {
     @Test
     public void testMethodInitWildCard()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("my.pkg.TargetClass.*init");
+        final Scope s = new ScopeImpl("my.pkg.TargetClass.*init");
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "clinit", "()V"));
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "init", "()V"));
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method_init", "()V"));
@@ -59,7 +58,7 @@ public class ScopeTest {
     @Test
     public void testReturnAllWildCard()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("* my.pkg.TargetClass.method");
+        final Scope s = new ScopeImpl("* my.pkg.TargetClass.method");
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "()V"));
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "()I"));
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "()Ljava.lang.String;"));
@@ -68,7 +67,7 @@ public class ScopeTest {
     @Test
     public void testReturnStartSepStringWildCard()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("*.String my.pkg.TargetClass.method");
+        final Scope s = new ScopeImpl("*.String my.pkg.TargetClass.method");
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "()Ljava.lang.String;"));
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "()Lmy.package.String;"));
     }
@@ -76,7 +75,7 @@ public class ScopeTest {
     @Test
     public void testReturnStartNoSepStringWildCard()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("*String my.pkg.TargetClass.method");
+        final Scope s = new ScopeImpl("*String my.pkg.TargetClass.method");
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "()Ljava.lang.String;"));
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "()Lmy.package.String;"));
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "()Lmy.package.BigString;"));
@@ -86,46 +85,46 @@ public class ScopeTest {
 
     /**
      * FIXED
-     * 
+     *
      * input:
      * java.lang.String main()
-     * 
+     *
      * result:
      * r=null c=java.lang.String m=main p=()
-     * 
+     *
      * correct:
      * r=java.lang.String c=null m=main p=()
      */
     @Test
     public void testMissingClassName()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("java.lang.String main()");
+        final Scope s = new ScopeImpl("java.lang.String main()");
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "main", "()Ljava.lang.String;"));
     }
 
     /**
      * FIXED
-     * 
+     *
      * input:
      * java.*.String main()
-     * 
+     *
      * result:
      * r=null c=java.* m=String main p=()
-     * 
+     *
      * correct:
      * r=java.*.String c=null m=main p=()
      */
     @Test
     public void testMissingClassName2()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("java.*.String main()");
+        final Scope s = new ScopeImpl("java.*.String main()");
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "main", "()Ljava.lang.String;"));
     }
 
     @Test
     public void testClassAllPackages()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("TargetClass.method");
+        final Scope s = new ScopeImpl("TargetClass.method");
         assertTrue(s.toString(), s.matches("TargetClass", "method", "()V"));
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "()V"));
     }
@@ -133,7 +132,7 @@ public class ScopeTest {
     @Test
     public void testClassDefaultPackage()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("[default].TargetClass.method");
+        final Scope s = new ScopeImpl("[default].TargetClass.method");
         assertTrue(s.toString(), s.matches("TargetClass", "method", "()V"));
         assertFalse(s.toString(), s.matches("my/pkg/TargetClass", "method", "()V"));
     }
@@ -141,7 +140,7 @@ public class ScopeTest {
     @Test
     public void testClassWildCard()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("my.pkg.*TargetClass.method");
+        final Scope s = new ScopeImpl("my.pkg.*TargetClass.method");
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "()V"));
         assertTrue(s.toString(), s.matches("my/pkg/pkg/TargetClass", "method", "()V"));
         assertTrue(s.toString(), s.matches("my/pkg/AnotherTargetClass", "method", "()V"));
@@ -153,7 +152,7 @@ public class ScopeTest {
     @Test
     public void testParameterAllRandom()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("my.pkg.TargetClass.method(..)");
+        final Scope s = new ScopeImpl("my.pkg.TargetClass.method(..)");
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "()V"));
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "(I)V"));
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "([I)V"));
@@ -163,7 +162,7 @@ public class ScopeTest {
     @Test
     public void testParameterNone()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("my.pkg.TargetClass.method()");
+        final Scope s = new ScopeImpl("my.pkg.TargetClass.method()");
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "()V"));
         assertFalse(s.toString(), s.matches("my/pkg/TargetClass", "method", "(I)V"));
         assertFalse(s.toString(), s.matches("my/pkg/TargetClass", "method", "([I)V"));
@@ -172,14 +171,14 @@ public class ScopeTest {
 
     /**
      * FIXED
-     * 
+     *
      * details:
      * (int, int, int, ..) should not match (I)V
      */
     @Test
     public void testParameterEndRandom()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("my.pkg.TargetClass.method(int, int, int, ..)");
+        final Scope s = new ScopeImpl("my.pkg.TargetClass.method(int, int, int, ..)");
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "(III)V"));
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "(IIII)V"));
         assertFalse(s.toString(), s.matches("my/pkg/TargetClass", "method", "(I)V"));
@@ -190,17 +189,17 @@ public class ScopeTest {
     @Test
     public void testCompleteAllReturnPattern()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("int *");
+        final Scope s = new ScopeImpl("int *");
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "()I"));
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "(I)I"));
-        assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "(Ljava.lang.String)I"));
+        assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "(Ljava.lang.String;)I"));
         assertTrue(s.toString(), s.matches("TargetClass", "method", "()I"));
     }
 
     @Test
     public void testCompleteAllAcceptPattern()
             throws ScopeParserException {
-        Scope s = new ScopeImpl("*(int, int, int)");
+        final Scope s = new ScopeImpl("*(int, int, int)");
         assertTrue(s.toString(), s.matches("TargetClass", "method", "(III)I"));
         assertTrue(s.toString(), s.matches("my/pkg/TargetClass", "method", "(III)V"));
         assertFalse(s.toString(), s.matches("my/pkg/TargetClass", "method", "(II)I"));

@@ -1,132 +1,144 @@
 package ch.usi.dag.disl;
 
-import java.util.Set;
-
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.AdviceAdapter;
-
 import ch.usi.dag.disl.localvar.ThreadLocalVar;
 import ch.usi.dag.disl.util.AsmHelper;
 import ch.usi.dag.disl.util.Constants;
+import org.objectweb.asm.*;
+import org.objectweb.asm.commons.AdviceAdapter;
+
+import java.util.Set;
+
 
 final class TLVInserter extends ClassVisitor {
 
-    private final Set<ThreadLocalVar> threadLocalVars;
+    private final Set <ThreadLocalVar> threadLocalVars;
 
-    public TLVInserter(ClassVisitor cv, Set<ThreadLocalVar> tlvs) {
-        super(Opcodes.ASM4, cv);
+
+    public TLVInserter (final ClassVisitor cv, final Set <ThreadLocalVar> tlvs) {
+        super (
+            Opcodes.ASM5, cv);
         this.threadLocalVars = tlvs;
     }
 
+
     @Override
-    public MethodVisitor visitMethod(int access, String name, String desc,
-            String sig, String[] exceptions) {
+    public MethodVisitor visitMethod (
+        final int access, final String name, final String desc,
+        final String sig, final String [] exceptions) {
 
         // add field initialization
         if (Constants.isConstructorName (name)) {
-            return new TLVInitializer(super.visitMethod(access, name, desc,
-                    sig, exceptions), access, name, desc);
+            return new TLVInitializer (super.visitMethod (access, name, desc,
+                sig, exceptions), access, name, desc);
         }
 
-        return super.visitMethod(access, name, desc, sig, exceptions);
+        return super.visitMethod (access, name, desc, sig, exceptions);
     }
+
 
     @Override
-    public void visitEnd() {
+    public void visitEnd () {
 
         // add fields
-        for (ThreadLocalVar tlv : threadLocalVars) {
-            super.visitField(Opcodes.ACC_PUBLIC, tlv.getName(),
-                    tlv.getTypeAsDesc(), null, null);
+        for (final ThreadLocalVar tlv : threadLocalVars) {
+            super.visitField (Opcodes.ACC_PUBLIC, tlv.getName (),
+                tlv.getTypeAsDesc (), null, null);
         }
 
-        super.visitEnd();
+        super.visitEnd ();
     }
+
 
     private class TLVInitializer extends AdviceAdapter {
 
-        private TLVInitializer(MethodVisitor mv, int access, String name,
-                String desc) {
+        private TLVInitializer (
+            final MethodVisitor mv, final int access, final String name,
+            final String desc) {
 
-            super(Opcodes.ASM4, mv, access, name, desc);
+            super (
+                Opcodes.ASM5, mv, access, name, desc);
         }
 
-        @Override
-        protected void onMethodEnter() {
 
-            final String THREAD_CLASS_NAME =
-                Type.getType(Thread.class).getInternalName();
+        @Override
+        protected void onMethodEnter () {
+
+            final String THREAD_CLASS_NAME = Type.getType (
+                Thread.class).getInternalName ();
             final String CURRENTTHREAD_METHOD_NAME = "currentThread";
-            final String CURRENTTHREAD_METHOD_SIG =
-                "()L" + THREAD_CLASS_NAME + ";";
+            final String CURRENTTHREAD_METHOD_SIG = "()L" + THREAD_CLASS_NAME + ";";
 
             // for each thread local var insert initialization
-            for (ThreadLocalVar tlv : threadLocalVars) {
+            for (final ThreadLocalVar tlv : threadLocalVars) {
 
-                Label getDefaultValue = new Label();
-                Label putValue = new Label();
+                final Label getDefaultValue = new Label ();
+                final Label putValue = new Label ();
 
                 // put this on the stack - for putfield
-                visitVarInsn(ALOAD, 0);
+                visitVarInsn (ALOAD, 0);
 
                 // -- inherited value --
-                if (tlv.isInheritable()) {
+                if (tlv.isInheritable ()) {
 
                     // put current thread instance on the stack
-                    visitMethodInsn(INVOKESTATIC,
-                            THREAD_CLASS_NAME,
-                            CURRENTTHREAD_METHOD_NAME,
-                            CURRENTTHREAD_METHOD_SIG);
+                    visitMethodInsn (INVOKESTATIC,
+                        THREAD_CLASS_NAME,
+                        CURRENTTHREAD_METHOD_NAME,
+                        CURRENTTHREAD_METHOD_SIG,
+                        false);
 
                     // if null, go to "get default value"
-                    visitJumpInsn(IFNULL, getDefaultValue);
+                    visitJumpInsn (IFNULL, getDefaultValue);
 
                     // put current thread instance on the stack
-                    visitMethodInsn(INVOKESTATIC,
-                            THREAD_CLASS_NAME,
-                            CURRENTTHREAD_METHOD_NAME,
-                            CURRENTTHREAD_METHOD_SIG);
+                    visitMethodInsn (INVOKESTATIC,
+                        THREAD_CLASS_NAME,
+                        CURRENTTHREAD_METHOD_NAME,
+                        CURRENTTHREAD_METHOD_SIG,
+                        false);
 
                     // get value from parent thread ant put it on the stack
-                    visitFieldInsn(GETFIELD, THREAD_CLASS_NAME, tlv.getName(),
-                            tlv.getTypeAsDesc());
+                    visitFieldInsn (GETFIELD, THREAD_CLASS_NAME, tlv.getName (),
+                        tlv.getTypeAsDesc ());
 
                     // go to "put value"
-                    visitJumpInsn(GOTO, putValue);
+                    visitJumpInsn (GOTO, putValue);
                 }
 
                 // -- default value --
-                visitLabel(getDefaultValue);
+                visitLabel (getDefaultValue);
 
                 // put the default value on the stack
-                Object defaultVal = tlv.getDefaultValue();
+                final Object defaultVal = tlv.getDefaultValue ();
                 if (defaultVal != null) {
                     // default value
-                    visitLdcInsn(defaultVal);
-                }
-                else {
+                    visitLdcInsn (defaultVal);
+
+                } else {
 
                     // if object or array
-                    if(AsmHelper.isReferenceType(tlv.getType())) {
+                    if (AsmHelper.isReferenceType (tlv.getType ())) {
                         // insert null
-                        visitInsn(ACONST_NULL);
+                        visitInsn (ACONST_NULL);
                     }
                     // if basic type
                     else {
+                        final char c = tlv.getTypeAsDesc ().charAt (0);
+                        final boolean longOrDouble = c == 'J' || c == 'D';
                         // insert 0 as default
-                        visitLdcInsn(0);
+                        if (longOrDouble) {
+                            visitLdcInsn (0L);
+                        } else {
+                            visitLdcInsn (0);
+                        }
                     }
                 }
 
                 // -- put value to the field --
-                visitLabel(putValue);
+                visitLabel (putValue);
 
-                visitFieldInsn(PUTFIELD, THREAD_CLASS_NAME, tlv.getName(),
-                        tlv.getTypeAsDesc());
+                visitFieldInsn (PUTFIELD, THREAD_CLASS_NAME, tlv.getName (),
+                    tlv.getTypeAsDesc ());
             }
         }
     }

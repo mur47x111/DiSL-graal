@@ -1,24 +1,5 @@
 package ch.usi.dag.disl;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodNode;
-
 import ch.usi.dag.disl.classparser.DislClasses;
 import ch.usi.dag.disl.exception.DiSLException;
 import ch.usi.dag.disl.exception.DiSLIOException;
@@ -39,6 +20,16 @@ import ch.usi.dag.disl.util.ClassNodeHelper;
 import ch.usi.dag.disl.util.Logging;
 import ch.usi.dag.disl.weaver.Weaver;
 import ch.usi.dag.util.logging.Logger;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -436,7 +427,7 @@ public final class DiSL {
 
             if (!insertTLVs.isEmpty ()) {
                 // instrument fields
-                final ClassNode cnWithFields = new ClassNode (Opcodes.ASM4);
+                final ClassNode cnWithFields = new ClassNode (Opcodes.ASM5);
                 classNode.accept (new TLVInserter (cnWithFields, insertTLVs));
 
                 // replace original code with instrumented one
@@ -583,18 +574,18 @@ public final class DiSL {
          * used when communicating with DiSL agent.
          */
         public interface Flag {
-            static final int CREATE_BYPASS = 1 << 0;
-            static final int DYNAMIC_BYPASS = 1 << 1;
-            static final int SPLIT_METHODS = 1 << 2;
-            static final int CATCH_EXCEPTIONS = 1 << 3;
-            static final int INSERT_DELIMITATION = 1 << 4;
+            int CREATE_BYPASS = 1 << 0;
+            int DYNAMIC_BYPASS = 1 << 1;
+            int SPLIT_METHODS = 1 << 2;
+            int CATCH_EXCEPTIONS = 1 << 3;
+            int INSERT_DELIMITATION = 1 << 4;
         }
 
         //
 
         private final int __flag;
 
-        private CodeOption (final int flag) {
+        CodeOption(final int flag) {
             __flag = flag;
         }
 
