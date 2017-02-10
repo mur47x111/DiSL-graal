@@ -1,12 +1,13 @@
 package ch.usi.dag.disl.test.suite.dynamiccontext.app;
 
+
 import java.util.Random;
 
 public class TargetClass {
 
     static final Class <?> STATIC_TYPE = TargetClass.class;
     static final String STATIC_NAME = STATIC_TYPE.getSimpleName ();
-    static final int STATIC_RAND = new Random (42).nextInt ();
+    static final int STATIC_RAND = new Random(42).nextInt ();
     static final double STATIC_MATH = Math.pow (Math.E,  Math.PI);
 
     final Class <?> instType = getClass ();

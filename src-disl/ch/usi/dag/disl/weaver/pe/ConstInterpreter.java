@@ -1,23 +1,16 @@
 package ch.usi.dag.disl.weaver.pe;
 
-import java.util.List;
-
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.IincInsnNode;
-import org.objectweb.asm.tree.IntInsnNode;
-import org.objectweb.asm.tree.InvokeDynamicInsnNode;
-import org.objectweb.asm.tree.LdcInsnNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.TypeInsnNode;
+import org.objectweb.asm.tree.*;
 import org.objectweb.asm.tree.analysis.Interpreter;
+
+import java.util.List;
 
 public class ConstInterpreter extends Interpreter<ConstValue> {
 
     protected ConstInterpreter() {
-        super(Opcodes.ASM4);
+        super(Opcodes.ASM5);
     }
 
     @Override
@@ -36,19 +29,19 @@ public class ConstInterpreter extends Interpreter<ConstValue> {
         case Opcodes.ACONST_NULL:
             return new ConstValue(1, ConstValue.NULL);
         case Opcodes.ICONST_M1:
-            return new ConstValue(1, (Integer) (-1));
+            return new ConstValue(1, (-1));
         case Opcodes.ICONST_0:
-            return new ConstValue(1, (Integer) 0);
+            return new ConstValue(1, 0);
         case Opcodes.ICONST_1:
-            return new ConstValue(1, (Integer) 1);
+            return new ConstValue(1, 1);
         case Opcodes.ICONST_2:
-            return new ConstValue(1, (Integer) 2);
+            return new ConstValue(1, 2);
         case Opcodes.ICONST_3:
-            return new ConstValue(1, (Integer) 3);
+            return new ConstValue(1, 3);
         case Opcodes.ICONST_4:
-            return new ConstValue(1, (Integer) 4);
+            return new ConstValue(1, 4);
         case Opcodes.ICONST_5:
-            return new ConstValue(1, (Integer) 5);
+            return new ConstValue(1, 5);
         case Opcodes.LCONST_0:
             return new ConstValue(2, new Long(0));
         case Opcodes.LCONST_1:
@@ -64,11 +57,11 @@ public class ConstInterpreter extends Interpreter<ConstValue> {
         case Opcodes.DCONST_1:
             return new ConstValue(2, new Double(1));
         case Opcodes.BIPUSH:
-            return new ConstValue(1, (Integer) (((IntInsnNode) insn).operand));
+            return new ConstValue(1, (((IntInsnNode) insn).operand));
         case Opcodes.SIPUSH:
-            return new ConstValue(1, (Integer) (((IntInsnNode) insn).operand));
+            return new ConstValue(1, (((IntInsnNode) insn).operand));
         case Opcodes.LDC:
-            Object cst = ((LdcInsnNode) insn).cst;
+            final Object cst = ((LdcInsnNode) insn).cst;
             return new ConstValue(
                     cst instanceof Long || cst instanceof Double ? 2 : 1, cst);
         case Opcodes.GETSTATIC:
@@ -147,99 +140,99 @@ public class ConstInterpreter extends Interpreter<ConstValue> {
 
         switch (insn.getOpcode()) {
         case Opcodes.INEG:
-            return new ConstValue(1, (Integer) (-(Integer) value.cst));
+            return new ConstValue(1, (-(Integer) value.cst));
 
         case Opcodes.LNEG:
-            return new ConstValue(2, (Long) (-(Long) value.cst));
+            return new ConstValue(2, (-(Long) value.cst));
 
         case Opcodes.FNEG:
-            return new ConstValue(1, (Float) (-(Float) value.cst));
+            return new ConstValue(1, (-(Float) value.cst));
 
         case Opcodes.DNEG:
-            return new ConstValue(2, (Double) (-(Double) value.cst));
+            return new ConstValue(2, (-(Double) value.cst));
 
         case Opcodes.IINC:
             return new ConstValue(
                     1,
-                    (Integer) ((Integer) value.cst + ((IincInsnNode) insn).incr));
+                    (Integer) value.cst + ((IincInsnNode) insn).incr);
 
         case Opcodes.I2L:
-            return new ConstValue(2, (Long) ((long) ((Integer) value.cst)));
+            return new ConstValue(2, ((long) ((Integer) value.cst)));
 
         case Opcodes.I2F:
-            return new ConstValue(1, (Float) ((float) ((Integer) value.cst)));
+            return new ConstValue(1, ((float) ((Integer) value.cst)));
 
         case Opcodes.I2D:
-            return new ConstValue(2, (Double) ((double) ((Integer) value.cst)));
+            return new ConstValue(2, ((double) ((Integer) value.cst)));
 
         case Opcodes.L2I:
             return new ConstValue(1,
-                    (Integer) ((int) (long) ((Long) value.cst)));
+                    ((int) (long) ((Long) value.cst)));
 
         case Opcodes.L2F:
-            return new ConstValue(1, (Float) ((float) ((Long) value.cst)));
+            return new ConstValue(1, ((float) ((Long) value.cst)));
 
         case Opcodes.L2D:
-            return new ConstValue(2, (Double) ((double) ((Long) value.cst)));
+            return new ConstValue(2, ((double) ((Long) value.cst)));
 
         case Opcodes.F2I:
             return new ConstValue(1,
-                    (Integer) ((int) ((float) ((Float) value.cst))));
+                    ((int) ((float) ((Float) value.cst))));
 
         case Opcodes.F2L:
             return new ConstValue(2,
-                    (Long) ((long) ((float) ((Float) value.cst))));
+                    ((long) ((float) ((Float) value.cst))));
 
         case Opcodes.F2D:
-            return new ConstValue(2, (Double) (-(Double) value.cst));
+            return new ConstValue(2, (-(Double) value.cst));
 
         case Opcodes.D2I:
             return new ConstValue(1,
-                    (Integer) ((int) (double) ((Double) value.cst)));
+                    ((int) (double) ((Double) value.cst)));
 
         case Opcodes.D2L:
             return new ConstValue(2,
-                    (Long) ((long) (double) ((Double) value.cst)));
+                    ((long) (double) ((Double) value.cst)));
 
         case Opcodes.D2F:
             return new ConstValue(1,
-                    (Float) ((float) (double) ((Double) value.cst)));
+                    ((float) (double) ((Double) value.cst)));
 
         case Opcodes.I2B:
             return new ConstValue(1,
-                    (Byte) ((byte) (int) ((Integer) value.cst)));
+                    ((byte) (int) ((Integer) value.cst)));
 
         case Opcodes.I2C:
             return new ConstValue(1,
-                    (Character) ((char) (int) ((Integer) value.cst)));
+                    ((char) (int) ((Integer) value.cst)));
 
         case Opcodes.I2S:
             return new ConstValue(1,
-                    (Short) ((short) (int) ((Integer) value.cst)));
+                    ((short) (int) ((Integer) value.cst)));
 
         case Opcodes.IFEQ:
-            return new ConstValue(1, (Boolean) ((Integer) value.cst == 0));
+            return new ConstValue(1, (Integer) value.cst == 0);
 
         case Opcodes.IFNE:
-            return new ConstValue(1, (Boolean) ((Integer) value.cst != 0));
+            return new ConstValue(1, (Integer) value.cst != 0);
 
         case Opcodes.IFLT:
-            return new ConstValue(1, (Boolean) ((Integer) value.cst < 0));
+            return new ConstValue(1, (Integer) value.cst < 0);
 
         case Opcodes.IFGE:
-            return new ConstValue(1, (Boolean) ((Integer) value.cst >= 0));
+            return new ConstValue(1, (Integer) value.cst >= 0);
 
         case Opcodes.IFGT:
-            return new ConstValue(1, (Boolean) ((Integer) value.cst > 0));
+            return new ConstValue(1, (Integer) value.cst > 0);
 
         case Opcodes.IFLE:
-            return new ConstValue(1, (Boolean) ((Integer) value.cst <= 0));
+            return new ConstValue(1, (Integer) value.cst <= 0);
 
         case Opcodes.IFNULL:
-            return new ConstValue(1, (Boolean) (value.cst == ConstValue.NULL));
+            return new ConstValue(1, value.cst == ConstValue.NULL);
 
         case Opcodes.IFNONNULL:
-            return new ConstValue(1, (Boolean) (value.cst != ConstValue.NULL));
+            return new ConstValue(1, value.cst != ConstValue.NULL);
 
         case Opcodes.CHECKCAST:
             return new ConstValue(1, value.cst);
@@ -252,13 +245,13 @@ public class ConstInterpreter extends Interpreter<ConstValue> {
 
                 if (Type.getInternalName(clazz).equals(
                         ((TypeInsnNode) insn).desc)) {
-                    return new ConstValue(1, (Integer) 1);
+                    return new ConstValue(1, 1);
                 }
 
                 clazz = clazz.getSuperclass();
             }
 
-            return new ConstValue(1, (Integer) 0);
+            return new ConstValue(1, 0);
 
         default:
             return new ConstValue(1);
@@ -349,159 +342,159 @@ public class ConstInterpreter extends Interpreter<ConstValue> {
 
         case Opcodes.LADD:
             return new ConstValue(2,
-                    (Long) ((Long) value1.cst + (Long) value2.cst));
+                    (Long) value1.cst + (Long) value2.cst);
 
         case Opcodes.LSUB:
             return new ConstValue(2,
-                    (Long) ((Long) value1.cst - (Long) value2.cst));
+                    (Long) value1.cst - (Long) value2.cst);
 
         case Opcodes.LMUL:
             return new ConstValue(2,
-                    (Long) ((Long) value1.cst * (Long) value2.cst));
+                    (Long) value1.cst * (Long) value2.cst);
 
         case Opcodes.LDIV:
             return new ConstValue(2,
-                    (Long) ((Long) value1.cst / (Long) value2.cst));
+                    (Long) value1.cst / (Long) value2.cst);
 
         case Opcodes.LREM:
             return new ConstValue(2,
-                    (Long) ((Long) value1.cst % (Long) value2.cst));
+                    (Long) value1.cst % (Long) value2.cst);
 
         case Opcodes.LSHL:
             return new ConstValue(2,
-                    (Long) ((Long) value1.cst << (Integer) value2.cst));
+                    (Long) value1.cst << (Integer) value2.cst);
 
         case Opcodes.LSHR:
             return new ConstValue(2,
-                    (Long) ((Long) value1.cst >> (Integer) value2.cst));
+                    (Long) value1.cst >> (Integer) value2.cst);
 
         case Opcodes.LUSHR:
             return new ConstValue(2,
-                    (Long) ((Long) value1.cst >>> (Integer) value2.cst));
+                    (Long) value1.cst >>> (Integer) value2.cst);
 
         case Opcodes.LAND:
             return new ConstValue(2,
-                    (Long) ((Long) value1.cst & (Long) value2.cst));
+                    (Long) value1.cst & (Long) value2.cst);
 
         case Opcodes.LOR:
             return new ConstValue(2,
-                    (Long) ((Long) value1.cst | (Long) value2.cst));
+                    (Long) value1.cst | (Long) value2.cst);
 
         case Opcodes.LXOR:
             return new ConstValue(2,
-                    (Long) ((Long) value1.cst ^ (Long) value2.cst));
+                    (Long) value1.cst ^ (Long) value2.cst);
 
         case Opcodes.DADD:
             return new ConstValue(2,
-                    (Double) ((Double) value1.cst + (Double) value2.cst));
+                    (Double) value1.cst + (Double) value2.cst);
 
         case Opcodes.DSUB:
             return new ConstValue(2,
-                    (Double) ((Double) value1.cst - (Double) value2.cst));
+                    (Double) value1.cst - (Double) value2.cst);
 
         case Opcodes.DMUL:
             return new ConstValue(2,
-                    (Double) ((Double) value1.cst * (Double) value2.cst));
+                    (Double) value1.cst * (Double) value2.cst);
 
         case Opcodes.DDIV:
             return new ConstValue(2,
-                    (Double) ((Double) value1.cst / (Double) value2.cst));
+                    (Double) value1.cst / (Double) value2.cst);
 
         case Opcodes.DREM:
             return new ConstValue(2,
-                    (Double) ((Double) value1.cst % (Double) value2.cst));
+                    (Double) value1.cst % (Double) value2.cst);
 
         case Opcodes.IADD:
             return new ConstValue(1,
-                    (Integer) ((Integer) value1.cst + (Integer) value2.cst));
+                    (Integer) value1.cst + (Integer) value2.cst);
 
         case Opcodes.ISUB:
             return new ConstValue(1,
-                    (Integer) ((Integer) value1.cst - (Integer) value2.cst));
+                    (Integer) value1.cst - (Integer) value2.cst);
 
         case Opcodes.IMUL:
             return new ConstValue(1,
-                    (Integer) ((Integer) value1.cst * (Integer) value2.cst));
+                    (Integer) value1.cst * (Integer) value2.cst);
 
         case Opcodes.IDIV:
             return new ConstValue(1,
-                    (Integer) ((Integer) value1.cst / (Integer) value2.cst));
+                    (Integer) value1.cst / (Integer) value2.cst);
 
         case Opcodes.IREM:
             return new ConstValue(1,
-                    (Integer) ((Integer) value1.cst % (Integer) value2.cst));
+                    (Integer) value1.cst % (Integer) value2.cst);
 
         case Opcodes.ISHL:
             return new ConstValue(1,
-                    (Integer) ((Integer) value1.cst << (Integer) value2.cst));
+                    (Integer) value1.cst << (Integer) value2.cst);
 
         case Opcodes.ISHR:
             return new ConstValue(1,
-                    (Integer) ((Integer) value1.cst >> (Integer) value2.cst));
+                    (Integer) value1.cst >> (Integer) value2.cst);
 
         case Opcodes.IUSHR:
             return new ConstValue(1,
-                    (Integer) ((Integer) value1.cst >>> (Integer) value2.cst));
+                    (Integer) value1.cst >>> (Integer) value2.cst);
 
         case Opcodes.IAND:
             return new ConstValue(1,
-                    (Integer) ((Integer) value1.cst & (Integer) value2.cst));
+                    (Integer) value1.cst & (Integer) value2.cst);
 
         case Opcodes.IOR:
             return new ConstValue(1,
-                    (Integer) ((Integer) value1.cst | (Integer) value2.cst));
+                    (Integer) value1.cst | (Integer) value2.cst);
 
         case Opcodes.IXOR:
             return new ConstValue(1,
-                    (Integer) ((Integer) value1.cst ^ (Integer) value2.cst));
+                    (Integer) value1.cst ^ (Integer) value2.cst);
 
         case Opcodes.FADD:
             return new ConstValue(1,
-                    (Float) ((Float) value1.cst + (Float) value2.cst));
+                    (Float) value1.cst + (Float) value2.cst);
 
         case Opcodes.FSUB:
             return new ConstValue(1,
-                    (Float) ((Float) value1.cst - (Float) value2.cst));
+                    (Float) value1.cst - (Float) value2.cst);
 
         case Opcodes.FMUL:
             return new ConstValue(1,
-                    (Float) ((Float) value1.cst * (Float) value2.cst));
+                    (Float) value1.cst * (Float) value2.cst);
 
         case Opcodes.FDIV:
             return new ConstValue(1,
-                    (Float) ((Float) value1.cst / (Float) value2.cst));
+                    (Float) value1.cst / (Float) value2.cst);
 
         case Opcodes.FREM:
             return new ConstValue(1,
-                    (Float) ((Float) value1.cst % (Float) value2.cst));
+                    (Float) value1.cst % (Float) value2.cst);
 
         case Opcodes.LCMP:
             if ((Long) value1.cst > (Long) value2.cst) {
-                return new ConstValue(1, (Integer) 1);
+                return new ConstValue(1, 1);
             } else if ((Long) value1.cst < (Long) value2.cst) {
-                return new ConstValue(1, (Integer) (-1));
+                return new ConstValue(1, (-1));
             } else {
-                return new ConstValue(1, (Integer) 0);
+                return new ConstValue(1, 0);
             }
 
         case Opcodes.FCMPL:
         case Opcodes.FCMPG:
             if ((Float) value1.cst > (Float) value2.cst) {
-                return new ConstValue(1, (Integer) 1);
+                return new ConstValue(1, 1);
             } else if ((Float) value1.cst < (Float) value2.cst) {
-                return new ConstValue(1, (Integer) (-1));
+                return new ConstValue(1, (-1));
             } else {
-                return new ConstValue(1, (Integer) 0);
+                return new ConstValue(1, 0);
             }
 
         case Opcodes.DCMPL:
         case Opcodes.DCMPG:
             if ((Double) value1.cst > (Double) value2.cst) {
-                return new ConstValue(1, (Integer) 1);
+                return new ConstValue(1, 1);
             } else if ((Double) value1.cst < (Double) value2.cst) {
-                return new ConstValue(1, (Integer) (-1));
+                return new ConstValue(1, (-1));
             } else {
-                return new ConstValue(1, (Integer) 0);
+                return new ConstValue(1, 0);
             }
 
         case Opcodes.IF_ICMPEQ:
@@ -512,25 +505,25 @@ public class ConstInterpreter extends Interpreter<ConstValue> {
 
         case Opcodes.IF_ICMPLT:
             return new ConstValue(1,
-                    (Boolean) ((Integer) value1.cst < (Integer) value2.cst));
+                    (Integer) value1.cst < (Integer) value2.cst);
 
         case Opcodes.IF_ICMPGE:
             return new ConstValue(1,
-                    (Boolean) ((Integer) value1.cst >= (Integer) value2.cst));
+                    (Integer) value1.cst >= (Integer) value2.cst);
 
         case Opcodes.IF_ICMPGT:
             return new ConstValue(1,
-                    (Boolean) ((Integer) value1.cst > (Integer) value2.cst));
+                    (Integer) value1.cst > (Integer) value2.cst);
 
         case Opcodes.IF_ICMPLE:
             return new ConstValue(1,
-                    (Boolean) ((Integer) value1.cst <= (Integer) value2.cst));
+                    (Integer) value1.cst <= (Integer) value2.cst);
 
         case Opcodes.IF_ACMPEQ:
-            return new ConstValue(1, (Boolean) (value1.cst == value2.cst));
+            return new ConstValue(1, value1.cst == value2.cst);
 
         case Opcodes.IF_ACMPNE:
-            return new ConstValue(1, (Boolean) (value1.cst != value2.cst));
+            return new ConstValue(1, value1.cst != value2.cst);
 
         default:
             return new ConstValue(1);
@@ -548,7 +541,7 @@ public class ConstInterpreter extends Interpreter<ConstValue> {
     public ConstValue naryOperation(final AbstractInsnNode insn,
             final List<? extends ConstValue> values) {
 
-        int opcode = insn.getOpcode();
+        final int opcode = insn.getOpcode();
 
         if (opcode == Opcodes.MULTIANEWARRAY) {
             return new ConstValue(1);
@@ -557,9 +550,9 @@ public class ConstInterpreter extends Interpreter<ConstValue> {
                     ((InvokeDynamicInsnNode) insn).desc).getSize());
         } else {
 
-            int size = Type.getReturnType(((MethodInsnNode) insn).desc)
+            final int size = Type.getReturnType(((MethodInsnNode) insn).desc)
                     .getSize();
-            Object cst = InvocationInterpreter.getInstance().execute(
+            final Object cst = InvocationInterpreter.getInstance().execute(
                     (MethodInsnNode) insn, values);
             return new ConstValue(size, cst);
         }

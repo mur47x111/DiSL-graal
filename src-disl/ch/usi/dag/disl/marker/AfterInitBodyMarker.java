@@ -1,20 +1,19 @@
 package ch.usi.dag.disl.marker;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
+import ch.usi.dag.disl.annotation.Before;
+import ch.usi.dag.disl.snippet.Shadow.WeavingRegion;
+import ch.usi.dag.disl.util.AsmHelper;
+import ch.usi.dag.disl.util.AsmHelper.Insns;
+import ch.usi.dag.disl.util.Constants;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.AdviceAdapter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import ch.usi.dag.disl.annotation.Before;
-import ch.usi.dag.disl.snippet.Shadow.WeavingRegion;
-import ch.usi.dag.disl.util.AsmHelper;
-import ch.usi.dag.disl.util.AsmHelper.Insns;
-import ch.usi.dag.disl.util.Constants;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -76,7 +75,7 @@ public class AfterInitBodyMarker extends AbstractMarker {
         //
         final AtomicBoolean superInitialized = new AtomicBoolean (false);
         final AdviceAdapter adapter = new AdviceAdapter (
-            Opcodes.ASM4, new MethodVisitor (Opcodes.ASM4) { /* empty */ },
+            Opcodes.ASM5, new MethodVisitor (Opcodes.ASM5) { /* empty */ },
             method.access, method.name, method.desc
         ) {
             @Override
